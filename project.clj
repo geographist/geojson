@@ -6,4 +6,6 @@
                              :username :env/AMAZON_KEY
                              :passphrase :env/AMAZON_SECRET}}
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [org.clojure/test.check "0.7.0"]])
+                 [org.clojure/test.check "0.7.0"]
+                 [clj-http "3.7.0"]
+                 [cheshire "5.8.0"]])

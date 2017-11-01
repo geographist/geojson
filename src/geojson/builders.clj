@@ -57,21 +57,28 @@
             {:type "Point"
              :coordinates point-coord})))
 
-(defmulti multi-point
-    "Builds a GeoJSON MultiPoint from input.
-     Filters nil values / invalid coordinates."
+(defmulti mp-or-ls
+    "Builds a coordinate vector for MultiPoint or LineString geometries"
     (fn [x] (class x)))
 
-(defmethod multi-point
+(defmethod mp-or-ls
     clojure.lang.PersistentVector
     [coords]
-    (let [multi-point-coords (filter some? (map coordinate coords))]
-        {:type "MultiPoint"
-         :coordinates (vec multi-point-coords)}))
+    (filter some? (map coordinate coords)))
 
-(defmethod multi-point
+(defmethod mp-or-ls
     clojure.lang.PersistentList
     [coords]
-    (let [multi-point-coords (filter some? (map coordinate coords))]
-        {:type "MultiPoint"
-         :coordinates (vec multi-point-coords)}))
+    (filter some? (map coordinate coords)))
+
+(defn multi-point
+    "Builds a GeoJSON MultiPoint from input."
+    [coords]
+    {:type "MultiPoint"
+     :coordinates (vec (mp-or-ls coords))})
+
+(defn linestring
+    "Build a GeoJSON LineString from input."
+    [coords]
+    {:type "LineString"
+     :coordinates (vec (mp-or-ls coords))})
